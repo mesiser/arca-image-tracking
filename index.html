@@ -10,6 +10,19 @@
     <!-- MindAR library -->
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
+    <!-- Кастомный компонент для удержания модели на экране -->
+    <script>
+        AFRAME.registerComponent('keep-visible', {
+            init: function () {
+                // Как только маркер пропадает из виду, MindAR делает объект невидимым.
+                // Мы слушаем это событие и принудительно возвращаем видимость.
+                this.el.addEventListener('targetLost', () => {
+                    this.el.setAttribute('visible', true);
+                });
+            }
+        });
+    </script>
+
     <style>
         body {
             margin: 0;
@@ -34,10 +47,10 @@
         <!-- Камера MindAR -->
         <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-        <!-- Маркер (берется первый целевой объект из targets.mind) -->
-        <a-entity mindar-image-target="targetIndex: 0">
+        <!-- Маркер. Добавляем сюда наш новый компонент keep-visible -->
+        <a-entity mindar-image-target="targetIndex: 0" keep-visible>
             
-            <!-- Ваша кепка -->
+            <!-- Ваша модель -->
             <a-gltf-model
                 src="#arcaModel"
                 position="0 0 0"
